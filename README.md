@@ -64,7 +64,7 @@ private throughout.
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-export UPSTREAM_LLM_URL=https://toolkit.rork.com/text/llm
+export UPSTREAM_LLM_URL=https://your-real-llm-endpoint.example.com/text/llm
 uvicorn main:app --host 0.0.0.0 --port 8080
 # then:  curl -s -X POST localhost:8080/text/llm -H 'Content-Type: application/json' \
 #          -d '{"messages":[{"role":"user","content":"say OK"}]}'

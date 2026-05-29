@@ -29,9 +29,9 @@ import httpx
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 
-# The REAL endpoint. Set this in Railway -> Variables. Never hard-code the
-# real URL in the repo you submit.
-UPSTREAM_LLM_URL = os.getenv("UPSTREAM_LLM_URL", "https://toolkit.rork.com/text/llm")
+# The REAL endpoint. Set this in Railway -> Variables. It is intentionally NOT
+# given a default here so the real URL never appears in this (public) repo.
+UPSTREAM_LLM_URL = os.getenv("UPSTREAM_LLM_URL", "")
 
 # Optional shared secret. If set, callers must send header  X-Proxy-Token: <value>.
 # Set the same value in DriveLegal's environment so only our app can call this.
@@ -58,6 +58,9 @@ async def _forward(request: Request):
 
     if "messages" not in body:
         raise HTTPException(status_code=400, detail="body must contain 'messages'")
+
+    if not UPSTREAM_LLM_URL:
+        raise HTTPException(status_code=500, detail="UPSTREAM_LLM_URL is not configured")
 
     # Forward ONLY the safe payload upstream. Strip client headers so nothing
     # leaks through; the real URL stays server-side.
